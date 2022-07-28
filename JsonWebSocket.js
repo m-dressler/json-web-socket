@@ -26,7 +26,7 @@ const JsonWebSocket = (wsUrl) => {
   };
 
   public.send = (event, data) => {
-    ws.send(JSON.stringify(event, data));
+    ws.send(JSON.stringify({event, data}));
   };
 
   public.sendSync = async (event, data) => {
