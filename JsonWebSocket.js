@@ -1,4 +1,4 @@
-const JsonWebSocket = (url) => {
+const JsonWebSocket = (wsUrl) => {
   const ws = new WebSocket(wsUrl);
 
   const EVENT_LISTENERS = {};
