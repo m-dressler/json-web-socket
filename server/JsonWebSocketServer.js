@@ -1,11 +1,12 @@
 const { WebSocketServer } = require("ws");
 
-const JsonWebSocketServer = (config, { onconnect, onclose }={}) => {
+const JsonWebSocketServer = (config, { onconnect, onclose } = {}) => {
   const webSocketServer = new WebSocketServer(config);
   const GLOBAL_EVENT_LISTENERS = {};
 
   webSocketServer.on("connection", async (socket, request) => {
     const EVENT_LISTENERS = {};
+    const socketSession = {};
 
     const on = (event, listener) => {
       if (listener) EVENT_LISTENERS[event] = listener;
@@ -29,14 +30,14 @@ const JsonWebSocketServer = (config, { onconnect, onclose }={}) => {
       return resData;
     };
 
-    if (onconnect) onconnect({ socket, request, on, send, sendSync });
+    if (onconnect) onconnect({ socket, request, on, send, sendSync, socketSession });
 
     socket.onclose = onclose;
 
     socket.onmessage = (message) => {
       const { event, data } = JSON.parse(message.data);
       const listener = EVENT_LISTENERS[event] || GLOBAL_EVENT_LISTENERS[event];
-      if (listener) listener(data, { send, sendSync });
+      if (listener) listener(data, { send, sendSync, socketSession });
       else throw "NO WS EVENT LISTENER FOR " + event;
     };
   });
