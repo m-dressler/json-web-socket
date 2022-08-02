@@ -7,7 +7,7 @@ const JsonWebSocketServer = ({ config }, { onconnect, onclose }) => {
   webSocketServer.on("connection", async (socket, request) => {
     const EVENT_LISTENERS = {};
 
-    const setEventListener = (event, listener) => {
+    const on = (event, listener) => {
       if (listener) EVENT_LISTENERS[event] = listener;
       else delete EVENT_LISTENERS[event];
     };
@@ -20,17 +20,16 @@ const JsonWebSocketServer = ({ config }, { onconnect, onclose }) => {
       const prevListener = EVENT_LISTENERS[event];
       let resolvePromise;
       const response = new Promise((resolve) => (resolvePromise = resolve));
-      setEventListener(event, (data) => {
+      on(event, (data) => {
         resolvePromise(data);
       });
       socket.send(JSON.stringify({ event, data }));
       const resData = await response;
-      setEventListener(prevListener);
+      on(prevListener);
       return resData;
     };
 
-    if (onconnect)
-      onconnect({ socket, request, setEventListener, send, sendSync });
+    if (onconnect) onconnect({ socket, request, on, send, sendSync });
 
     socket.onclose = onclose;
 
@@ -42,10 +41,10 @@ const JsonWebSocketServer = ({ config }, { onconnect, onclose }) => {
     };
   });
 
-  const setEventListener = (event, listener) => {
+  const on = (event, listener) => {
     if (listener) GLOBAL_EVENT_LISTENERS[event] = listener;
     else delete GLOBAL_EVENT_LISTENERS[event];
   };
 
-  return { webSocketServer, setEventListener };
+  return { webSocketServer, on };
 };

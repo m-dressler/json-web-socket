@@ -20,7 +20,7 @@ const JsonWebSocket = (wsUrl) => {
     else console.error("NO WS EVENT LISTENER FOR", event);
   };
 
-  public.setEventListener = (event, listener) => {
+  public.on = (event, listener) => {
     if (listener) EVENT_LISTENERS[event] = listener;
     else delete EVENT_LISTENERS[event];
   };
@@ -33,12 +33,12 @@ const JsonWebSocket = (wsUrl) => {
     const prevListener = EVENT_LISTENERS[event];
     let resolvePromise;
     const response = new Promise((resolve) => (resolvePromise = resolve));
-    public.setEventListener(event, (data) => {
+    public.on(event, (data) => {
       resolvePromise(data);
     });
     ws.send(JSON.stringify({ event, data }));
     const resData = await response;
-    public.setEventListener(prevListener);
+    public.on(prevListener);
     return resData;
   };
 
