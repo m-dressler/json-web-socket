@@ -1,7 +1,7 @@
 import { WebSocketServer } from "ws";
 
-export default JsonWebSocketServer = ({ config }, { onconnect, onclose }) => {
-  const webSocketServer = new WebSocketServer({ server });
+export default JsonWebSocketServer = (config, { onconnect, onclose }={}) => {
+  const webSocketServer = new WebSocketServer(config);
   const GLOBAL_EVENT_LISTENERS = {};
 
   webSocketServer.on("connection", async (socket, request) => {
