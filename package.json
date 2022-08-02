@@ -1,0 +1,25 @@
+{
+  "name": "json-web-socket",
+  "version": "1.0.0",
+  "description": "JSON abstraction to the WebSocket for both client & server using event system",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/m-dressler/json-web-socket.git"
+  },
+  "keywords": [
+    "websocket"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/m-dressler/json-web-socket/issues"
+  },
+  "homepage": "https://github.com/m-dressler/json-web-socket#readme",
+  "dependencies": {
+    "ws": "^8.8.1"
+  }
+}
