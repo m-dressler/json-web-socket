@@ -1,17 +1,17 @@
-const JsonWebSocket = (wsUrl) => {
-  const public = {};
+export default JsonWebSocket = (wsUrl) => {
+  const returnObject = {};
 
   const EVENT_LISTENERS = {};
 
   const ws = new WebSocket(wsUrl);
   ws.onopen = () => {
-    if (public.onopen) public.onopen();
+    if (returnObject.onopen) returnObject.onopen();
   };
   ws.onclose = () => {
-    if (public.onclose) public.onclose();
+    if (returnObject.onclose) returnObject.onclose();
   };
   ws.onerror = () => {
-    if (public.onerror) public.onerror();
+    if (returnObject.onerror) returnObject.onerror();
   };
   ws.onmessage = (message) => {
     const { event, data } = JSON.parse(message.data);
@@ -20,27 +20,27 @@ const JsonWebSocket = (wsUrl) => {
     else console.error("NO WS EVENT LISTENER FOR", event);
   };
 
-  public.on = (event, listener) => {
+  returnObject.on = (event, listener) => {
     if (listener) EVENT_LISTENERS[event] = listener;
     else delete EVENT_LISTENERS[event];
   };
 
-  public.send = (event, data) => {
-    ws.send(JSON.stringify({event, data}));
+  returnObject.send = (event, data) => {
+    ws.send(JSON.stringify({ event, data }));
   };
 
-  public.sendSync = async (event, data) => {
+  returnObject.sendSync = async (event, data) => {
     const prevListener = EVENT_LISTENERS[event];
     let resolvePromise;
     const response = new Promise((resolve) => (resolvePromise = resolve));
-    public.on(event, (data) => {
+    returnObject.on(event, (data) => {
       resolvePromise(data);
     });
     ws.send(JSON.stringify({ event, data }));
     const resData = await response;
-    public.on(prevListener);
+    returnObject.on(prevListener);
     return resData;
   };
 
-  return public;
+  return returnObject;
 };
