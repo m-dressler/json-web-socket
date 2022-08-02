@@ -1,4 +1,4 @@
-export default JsonWebSocket = (wsUrl) => {
+const JsonWebSocket = (wsUrl) => {
   const returnObject = {};
 
   const EVENT_LISTENERS = {};
@@ -44,3 +44,5 @@ export default JsonWebSocket = (wsUrl) => {
 
   return returnObject;
 };
+
+module.exports = JsonWebSocket;

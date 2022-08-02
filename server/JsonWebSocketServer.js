@@ -1,6 +1,6 @@
-import { WebSocketServer } from "ws";
+const { WebSocketServer } = require("ws");
 
-export default JsonWebSocketServer = (config, { onconnect, onclose }={}) => {
+const JsonWebSocketServer = (config, { onconnect, onclose }={}) => {
   const webSocketServer = new WebSocketServer(config);
   const GLOBAL_EVENT_LISTENERS = {};
 
@@ -48,3 +48,5 @@ export default JsonWebSocketServer = (config, { onconnect, onclose }={}) => {
 
   return { webSocketServer, on };
 };
+
+module.exports = JsonWebSocketServer;
