@@ -6,7 +6,7 @@ const JsonWebSocketServer = (config, { onconnect, onclose } = {}) => {
 
   webSocketServer.on("connection", async (socket, request) => {
     const EVENT_LISTENERS = {};
-    const socketSession = {};
+    const session = {};
 
     const on = (event, listener) => {
       if (listener) EVENT_LISTENERS[event] = listener;
