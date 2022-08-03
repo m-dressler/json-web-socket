@@ -1,6 +1,6 @@
 {
   "name": "ws-json",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "JSON abstraction to the WebSocket for both client & server using event system",
   "main": "index.js",
   "exports": {
