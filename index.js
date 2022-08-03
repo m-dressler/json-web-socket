@@ -2,9 +2,8 @@
 
 const JsonWebSocket = require('./client/JsonWebSocket.js');
 
-JsonWebSocket.JsonWebSocket = require('./server/JsonWebSocketServer.js');
+JsonWebSocket.JsonWebSocket = JsonWebSocket;
+JsonWebSocket.JsonWebSocketServer = require('./server/JsonWebSocketServer.js');
 
-JsonWebSocket.WebSocket = WebSocket;
-JsonWebSocket.WebSocketServer = WebSocket.Server;
-
-module.exports = JsonWebSocket;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.JsonWebSocket = JsonWebSocket;
