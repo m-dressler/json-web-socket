@@ -7,7 +7,7 @@
     "import": "./wrapper.mjs",
     "require": "./index.js"
   },
-  "browser": "browser.js",
+  "browser": "./browser/JsonWebSocket.js",
   "engines": {
     "node": ">=10.0.0"
   },
