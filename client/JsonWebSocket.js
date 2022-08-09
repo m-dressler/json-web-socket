@@ -1,3 +1,5 @@
+const { WebSocket } = require("ws");
+
 const JsonWebSocket = (wsUrl) => {
   const returnObject = {};
 
