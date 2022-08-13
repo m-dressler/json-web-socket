@@ -1,15 +1,19 @@
 const { WebSocket } = require("ws");
 
 const JsonWebSocket = (wsUrl) => {
-  const returnObject = {};
+  const returnObject = {
+    readyState: WebSocket.CONNECTING
+  };
 
   const EVENT_LISTENERS = {};
 
   const ws = new WebSocket(wsUrl);
   ws.onopen = () => {
+    returnObject.readyState = WebSocket.OPEN;
     if (returnObject.onopen) returnObject.onopen();
   };
   ws.onclose = () => {
+    returnObject.readyState = WebSocket.CLOSED;
     if (returnObject.onclose) returnObject.onclose();
   };
   ws.onmessage = (message) => {
