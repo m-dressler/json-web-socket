@@ -12,9 +12,6 @@ const JsonWebSocket = (wsUrl) => {
   ws.onclose = () => {
     if (returnObject.onclose) returnObject.onclose();
   };
-  ws.onerror = () => {
-    if (returnObject.onerror) returnObject.onerror();
-  };
   ws.onmessage = (message) => {
     const { event, data } = JSON.parse(message.data);
     const listener = EVENT_LISTENERS[event];
