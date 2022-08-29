@@ -1,8 +1,23 @@
 const { WebSocket } = require("ws");
 
+/**
+ * @typedef {Object} JsonWebSocket
+ * @property {(0|1|2|3)} readyState CONNECTING | CONNECTED | CLOSING | CLOSED
+ * @property {function():void} onopen
+ * @property {function():void} onclose
+ * @property {function(string, function(object):void):void} on Add an event listener to a JsonWebSocket event
+ * @property {function(string, object):void} send Sends a JsonWebSocket message to the connection
+ * @property {function(string, object):Promise<object>} sendSync Sends a JsonWebSocket message to the connection and allows to await the response to the same message
+ */
+
+/**
+ *
+ * @param {string} wsUrl The ws:// or wss:// URL to connect to the WebSocket
+ * @returns {JsonWebSocket} The JsonWebSocket
+ */
 const JsonWebSocket = (wsUrl) => {
   const returnObject = {
-    readyState: WebSocket.CONNECTING
+    readyState: WebSocket.CONNECTING,
   };
 
   const EVENT_LISTENERS = {};

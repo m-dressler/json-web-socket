@@ -1,22 +1,46 @@
-const { WebSocketServer } = require("ws");
+const WebSocket = require("ws");
 
+/**
+ * @callback OnFunction
+ * @param {string} event
+ * @param {function(object):void|null} listener
+ *
+ * @callback SendFunction
+ * @param {string} event
+ * @param {object} data
+ *
+ * @callback SendSyncFunction
+ * @param {string} event
+ * @param {object} data
+ * @returns {Promise<object>} The response for the same event
+ */
+
+/**
+ *
+ * @param {WebSocket.ServerOptions} config
+ * @param {{onconnect:function({ socket:WebSocket.WebSocket, request:import('http').IncomingMessage, on:OnFunction, send:SendFunction, sendSync:SendSyncFunction, session }):void, onclose:function():void}} JsonWebSocketServerConfig
+ * @returns {{webSocketServer: WebSocket.Server, on: OnFunction}}
+ */
 const JsonWebSocketServer = (config, { onconnect, onclose } = {}) => {
-  const webSocketServer = new WebSocketServer(config);
+  const webSocketServer = new WebSocket.Server(config);
   const GLOBAL_EVENT_LISTENERS = {};
 
   webSocketServer.on("connection", async (socket, request) => {
     const EVENT_LISTENERS = {};
     const session = {};
 
+    /** @type {OnFunction} */
     const on = (event, listener) => {
       if (listener) EVENT_LISTENERS[event] = listener;
       else delete EVENT_LISTENERS[event];
     };
 
+    /** @type {SendFunction} */
     const send = (event, data) => {
       socket.send(JSON.stringify({ event, data }));
     };
 
+    /** @type {SendSyncFunction} */
     const sendSync = async (event, data) => {
       const prevListener = EVENT_LISTENERS[event];
       let resolvePromise;
@@ -42,6 +66,7 @@ const JsonWebSocketServer = (config, { onconnect, onclose } = {}) => {
     };
   });
 
+  /** @type {OnFunction} */
   const on = (event, listener) => {
     if (listener) GLOBAL_EVENT_LISTENERS[event] = listener;
     else delete GLOBAL_EVENT_LISTENERS[event];
