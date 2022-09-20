@@ -32,6 +32,11 @@ const JsonWebSocket = (wsUrl) => {
     else console.error("NO WS EVENT LISTENER FOR", event);
   };
 
+  /**
+   *
+   * @param {string} event
+   * @param {(data:any)=>void} listener
+   */
   result.on = (event, listener) => {
     if (listener) EVENT_LISTENERS[event] = listener;
     else delete EVENT_LISTENERS[event];

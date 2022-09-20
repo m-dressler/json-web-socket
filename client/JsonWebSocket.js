@@ -27,13 +27,18 @@ const JsonWebSocket = (wsUrl) => {
     result.readyState = WebSocket.CLOSED;
     if (result.onclose) result.onclose();
   };
-  ws.onmessage = (message) => {
+  ws.onmessage = (/** @type {{data:string}} */ message) => {
     const { event, data } = JSON.parse(message.data);
     const listener = EVENT_LISTENERS[event];
     if (listener) listener(data);
     else throw "NO WS EVENT LISTENER FOR" + event;
   };
 
+  /**
+   *
+   * @param {string} event
+   * @param {(data:any)=>void} listener
+   */
   result.on = (event, listener) => {
     if (listener) EVENT_LISTENERS[event] = listener;
     else delete EVENT_LISTENERS[event];
