@@ -73,7 +73,13 @@ const JsonWebSocketServer = (config, params) => {
     else delete GLOBAL_EVENT_LISTENERS[event];
   };
 
-  return { webSocketServer, on };
+  /**
+   * @param {Object.<string, (data:any, {})=>void|Promise<void>>} handlers
+   */
+  const onAll = (handlers) =>
+    void Object.assign(GLOBAL_EVENT_LISTENERS, handlers);
+
+  return { webSocketServer, on, onAll };
 };
 
 module.exports = JsonWebSocketServer;
