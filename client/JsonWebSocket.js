@@ -6,8 +6,10 @@ const { WebSocket } = require("ws");
  * Creates a new WebSocket client
  *
  * @param {string} wsUrl The ws:// or wss:// URL to connect to the WebSocket
+ * @param {object} [params]
+ * @param {number} [params.reconnectTime]
  */
-const JsonWebSocket = (wsUrl) => {
+const JsonWebSocket = (wsUrl, params) => {
   const result = {};
   /** @type {0|1|2|3} CONNECTING | CONNECTED | CLOSING | CLOSED */
   result.readyState = WebSocket.CONNECTING;
@@ -18,21 +20,31 @@ const JsonWebSocket = (wsUrl) => {
 
   const EVENT_LISTENERS = {};
 
-  const ws = new WebSocket(wsUrl);
-  ws.onopen = () => {
-    result.readyState = WebSocket.OPEN;
-    if (result.onopen) result.onopen();
+  let ws;
+
+  const init = () => {
+    ws = new WebSocket(wsUrl);
+    result.readyState = WebSocket.CONNECTING;
+    ws.onopen = () => {
+      result.readyState = WebSocket.OPEN;
+      if (result.onopen) result.onopen();
+    };
+    ws.onclose = () => {
+      result.readyState = WebSocket.CLOSED;
+      if (result.onclose) result.onclose();
+
+      const connectAfter = params.reconnectTime;
+      if (connectAfter !== undefined && connectAfter === 0) init();
+      else if (connectAfter !== undefined) setTimeout(init, connectAfter);
+    };
+    ws.onmessage = (/** @type {{data:string}} */ message) => {
+      const { event, data } = JSON.parse(message.data);
+      const listener = EVENT_LISTENERS[event];
+      if (listener) listener(data);
+      else throw "NO WS EVENT LISTENER FOR" + event;
+    };
   };
-  ws.onclose = () => {
-    result.readyState = WebSocket.CLOSED;
-    if (result.onclose) result.onclose();
-  };
-  ws.onmessage = (/** @type {{data:string}} */ message) => {
-    const { event, data } = JSON.parse(message.data);
-    const listener = EVENT_LISTENERS[event];
-    if (listener) listener(data);
-    else throw "NO WS EVENT LISTENER FOR" + event;
-  };
+  init();
 
   /**
    *
