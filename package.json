@@ -30,5 +30,7 @@
   "dependencies": {
     "ws": "^8.8.1"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "typescript": "^4.8.3"
+  }
 }

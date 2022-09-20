@@ -1,13 +1,14 @@
+// @ts-check
 
 /**
  * Creates a new WebSocket client
  *
  * @param {string} wsUrl The ws:// or wss:// URL to connect to the WebSocket
  */
- const JsonWebSocket = (wsUrl) => {
+const JsonWebSocket = (wsUrl) => {
   const result = {};
   /** @type {0|1|2|3} CONNECTING | CONNECTED | CLOSING | CLOSED */
-  result.readyState = WebSocket.CONNECTING;
+  result.readyState = 0;
   /** @type {()=>void|undefined} */
   result.onclose = undefined;
   /** @type {()=>void|undefined} */
@@ -17,11 +18,11 @@
 
   const ws = new WebSocket(wsUrl);
   ws.onopen = () => {
-    result.readyState = WebSocket.OPEN;
+    result.readyState = 1;
     if (result.onopen) result.onopen();
   };
   ws.onclose = () => {
-    result.readyState = WebSocket.CLOSED;
+    result.readyState = 3;
     if (result.onclose) result.onclose();
   };
   ws.onmessage = (message) => {

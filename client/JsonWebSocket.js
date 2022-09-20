@@ -1,3 +1,5 @@
+// @ts-check
+
 const { WebSocket } = require("ws");
 
 /**
@@ -29,7 +31,7 @@ const JsonWebSocket = (wsUrl) => {
     const { event, data } = JSON.parse(message.data);
     const listener = EVENT_LISTENERS[event];
     if (listener) listener(data);
-    else console.error("NO WS EVENT LISTENER FOR", event);
+    else throw "NO WS EVENT LISTENER FOR" + event;
   };
 
   result.on = (event, listener) => {
