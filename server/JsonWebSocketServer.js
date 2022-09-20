@@ -1,5 +1,6 @@
 // @ts-check
 
+// @ts-ignore
 const WebSocket = require("ws");
 
 /**
