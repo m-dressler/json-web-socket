@@ -65,7 +65,7 @@ const JsonWebSocket = (wsUrl) => {
     });
     ws.send(JSON.stringify({ event, data }));
     const resData = await response;
-    result.on(prevListener);
+    result.on(event, prevListener);
     return resData;
   };
 
