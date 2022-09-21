@@ -14,13 +14,15 @@ const JsonWebSocket = (wsUrl, params) => {
   const result = {};
   /** @type {0|1|2|3} CONNECTING | CONNECTED | CLOSING | CLOSED */
   result.readyState = WebSocket.CONNECTING;
-  /** @type {()=>void|undefined} */
+  /** @type {(()=>any)|undefined} */
   result.onclose = undefined;
-  /** @type {()=>void|undefined} */
+  /** @type {(()=>any)|undefined} */
   result.onopen = undefined;
 
+  /** @type {Object.<string,(data:any)=>any>} */
   const EVENT_LISTENERS = {};
 
+  /** @type {WebSocket} */
   let ws;
   /** @type {(value:any)=>void} */
   let resolveConnect;
@@ -83,6 +85,7 @@ const JsonWebSocket = (wsUrl, params) => {
   result.sendSync = async (event, data) => {
     await connectPromise;
     ws.send(JSON.stringify({ event, data }));
+    /** @type {(data:any)=>any} */
     const prevListener = EVENT_LISTENERS[event];
     let resolvePromise;
     const response = new Promise((resolve) => (resolvePromise = resolve));
