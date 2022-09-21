@@ -90,7 +90,7 @@ export const JsonWebSocket = (wsUrl, params) => {
       resolvePromise(data);
     });
     const resData = await response;
-    result.on(prevListener, prevListener);
+    result.on(event, prevListener);
     return resData;
   };
 
