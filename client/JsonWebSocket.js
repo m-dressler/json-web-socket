@@ -21,8 +21,6 @@ const JsonWebSocket = (wsUrl, params) => {
 
   const EVENT_LISTENERS = {};
 
-  const pendingSends = [];
-
   let ws;
   /** @type {(value:any)=>void} */
   let resolveConnect;
