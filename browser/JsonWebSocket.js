@@ -31,13 +31,13 @@ export const JsonWebSocket = (wsUrl, params) => {
     ws.onopen = () => {
       result.readyState = 1;
       if (result.onopen) result.onopen();
-      resolveConnect();
+      resolveConnect(void 0);
     };
     ws.onclose = () => {
       result.readyState = 3;
       if (result.onclose) result.onclose();
 
-      const connectAfter = params.reconnectTime;
+      const connectAfter = params?.reconnectTime;
       if (connectAfter !== undefined && connectAfter === 0) init();
       else if (connectAfter !== undefined) setTimeout(init, connectAfter);
 
