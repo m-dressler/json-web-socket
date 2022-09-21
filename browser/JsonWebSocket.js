@@ -7,7 +7,7 @@
  * @param {object} [params]
  * @param {number} [params.reconnectTime]
  */
-const JsonWebSocket = (wsUrl, params) => {
+export const JsonWebSocket = (wsUrl, params) => {
   const result = {};
   /** @type {0|1|2|3} CONNECTING | CONNECTED | CLOSING | CLOSED */
   result.readyState = 0;
@@ -95,3 +95,5 @@ const JsonWebSocket = (wsUrl, params) => {
 
   return result;
 };
+
+export default JsonWebSocket;
