@@ -3,12 +3,12 @@
 /**
  * Creates a new WebSocket client
  *
- * @param {string} wsUrl The ws:// or wss:// URL to connect to the WebSocket
+ * @param {string} [url] The ws:// or wss:// URL to connect to the WebSocket
  * @param {object} [params]
  * @param {number} [params.reconnectTime]
  * @returns {import('../client/JsonWebSocket.js').JsonWebSocket}
  */
-export const JsonWebSocket = (wsUrl, params) => {
+export const JsonWebSocket = (url, params) => {
   const result = {};
   /** @type {0|1|2|3} CONNECTING | CONNECTED | CLOSING | CLOSED */
   result.readyState = 0;
@@ -26,8 +26,11 @@ export const JsonWebSocket = (wsUrl, params) => {
   let resolveConnect;
   let connectPromise = new Promise((res) => (resolveConnect = res));
 
-  const init = () => {
-    ws = new WebSocket(wsUrl);
+  /**
+   * @param {string} url
+   */
+  result.connect = (url) => {
+    ws = new WebSocket(url);
     result.readyState = 0;
     ws.onopen = () => {
       result.readyState = 1;
@@ -39,8 +42,9 @@ export const JsonWebSocket = (wsUrl, params) => {
       if (result.onclose) result.onclose();
 
       const connectAfter = params?.reconnectTime;
-      if (connectAfter !== undefined && connectAfter === 0) init();
-      else if (connectAfter !== undefined) setTimeout(init, connectAfter);
+      if (connectAfter !== undefined && connectAfter === 0) result.connect(url);
+      else if (connectAfter !== undefined)
+        setTimeout(() => result.connect(url), connectAfter);
 
       connectPromise = new Promise((res) => (resolveConnect = res));
     };
@@ -50,8 +54,9 @@ export const JsonWebSocket = (wsUrl, params) => {
       if (listener) listener(data);
       else console.error("NO WS EVENT LISTENER FOR", event);
     };
+    return connectPromise;
   };
-  init();
+  if (url !== undefined) result.connect(url);
 
   /**
    *
