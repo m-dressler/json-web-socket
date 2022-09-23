@@ -7,18 +7,19 @@ export = JsonWebSocket;
  * @property {(event: string, listener: (data: any) => void)=>void} on
  * @property {(event: string, data: any)=>void} send
  * @property {(event: string, data: any)=>Promise<any>} sendSync
+ * @property {(url:string)=>Promise<void>} connect
  */
 /**
  * Creates a new WebSocket client
  *
- * @param {string} wsUrl The ws:// or wss:// URL to connect to the WebSocket
+ * @param {string} [url] The ws:// or wss:// URL to connect to the WebSocket
  * @param {object} [params]
  * @param {number} [params.reconnectTime]
  * @returns {JsonWebSocket}
  */
-declare function JsonWebSocket(wsUrl: string, params?: {
-    reconnectTime?: number;
-}): JsonWebSocket;
+declare function JsonWebSocket(url?: string | undefined, params?: {
+    reconnectTime?: number | undefined;
+} | undefined): JsonWebSocket;
 declare namespace JsonWebSocket {
     export { JsonWebSocket };
 }
@@ -29,4 +30,5 @@ type JsonWebSocket = {
     on: (event: string, listener: (data: any) => void) => void;
     send: (event: string, data: any) => void;
     sendSync: (event: string, data: any) => Promise<any>;
+    connect: (url: string) => Promise<void>;
 };

@@ -1,4 +1,4 @@
-export function JsonWebSocket(wsUrl: string, params?: {
-    reconnectTime?: number;
-}): import('../client/JsonWebSocket.js').JsonWebSocket;
+export function JsonWebSocket(url?: string | undefined, params?: {
+    reconnectTime?: number | undefined;
+} | undefined): import('../client/JsonWebSocket.js').JsonWebSocket;
 export default JsonWebSocket;
