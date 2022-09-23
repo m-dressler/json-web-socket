@@ -5,6 +5,13 @@ const WebSocket = require("ws");
 
 // @ts-ignore
 /** @typedef {import('http').IncomingMessage} IncomingMessage */
+/**
+ * @typedef {Object} WebSocketParams
+ * @property {(event:string, data:any)=>void} send Sends data via the WebSocket to the client
+ * @property {(event:string, data:any)=>Promise<any>} sendSync Sends data via the WebSocket to the client and awaits the same event response
+ * @property {any} session The contextual data of the WebSocket's session
+ * @property {WebSocket} socket The socket for the underlying connection
+ */
 
 /**
  * @param {WebSocket.ServerOptions} [config]
@@ -14,63 +21,74 @@ const WebSocket = require("ws");
  */
 const JsonWebSocketServer = (config, params) => {
   const webSocketServer = new WebSocket.Server(config);
+  /** @type {Object.<string, (data:any, params?: WebSocketParams)=>void|Promise<void>>} */
   const GLOBAL_EVENT_LISTENERS = {};
 
-  webSocketServer.on("connection", (socket, request) => {
-    const EVENT_LISTENERS = {};
-    const session = {};
-
+  webSocketServer.on(
+    "connection",
     /**
-     * @param {string} event
-     * @param {(data:any)=>void|Promise<void>} listener
+     * @param {WebSocket} socket
+     * @param {IncomingMessage} request
      */
-    const on = (event, listener) => {
-      if (listener) EVENT_LISTENERS[event] = listener;
-      else delete EVENT_LISTENERS[event];
-    };
+    (socket, request) => {
+      /** @type {Object.<string, (data:any, params?: WebSocketParams)=>void|Promise<void>>} */
+      const EVENT_LISTENERS = {};
+      const session = {};
 
-    /**
-     * @param {string} event
-     * @param {any} data
-     */
-    const send = (event, data) => {
-      socket.send(JSON.stringify({ event, data }));
-    };
+      /**
+       * @param {string} event
+       * @param {(data:any, params?: WebSocketParams)=>void|Promise<void>} listener
+       */
+      const on = (event, listener) => {
+        if (listener) EVENT_LISTENERS[event] = listener;
+        else delete EVENT_LISTENERS[event];
+      };
 
-    /**
-     * @param {string} event
-     * @param {any} data
-     * @returns {Promise<any>}
-     */
-    const sendSync = async (event, data) => {
-      const prevListener = EVENT_LISTENERS[event];
-      let resolvePromise;
-      const response = new Promise((resolve) => (resolvePromise = resolve));
-      on(event, (data) => {
-        resolvePromise(data);
-      });
-      socket.send(JSON.stringify({ event, data }));
-      const resData = await response;
-      on(event, prevListener);
-      return resData;
-    };
+      /**
+       * @param {string} event
+       * @param {any} data
+       */
+      const send = (event, data) => {
+        socket.send(JSON.stringify({ event, data }));
+      };
 
-    if (params?.onconnect)
-      params.onconnect({ socket, request, send, sendSync, session });
+      /**
+       * @param {string} event
+       * @param {any} data
+       * @returns {Promise<any>}
+       */
+      const sendSync = async (event, data) => {
+        const prevListener = EVENT_LISTENERS[event];
+        /** @type {(_:any)=>void} */
+        let resolvePromise;
+        const response = new Promise((resolve) => (resolvePromise = resolve));
+        on(event, (data) => {
+          resolvePromise(data);
+        });
+        socket.send(JSON.stringify({ event, data }));
+        const resData = await response;
+        on(event, prevListener);
+        return resData;
+      };
 
-    socket.onclose = params?.onclose;
+      if (params?.onconnect)
+        params.onconnect({ socket, request, send, sendSync, session });
 
-    socket.onmessage = (/** @type {{data:string}} */ message) => {
-      const { event, data } = JSON.parse(message.data);
-      const listener = EVENT_LISTENERS[event] || GLOBAL_EVENT_LISTENERS[event];
-      if (listener) listener(data, { send, sendSync, session, socket });
-      else throw "NO WS EVENT LISTENER FOR " + event;
-    };
-  });
+      socket.onclose = params?.onclose;
+
+      socket.onmessage = (/** @type {{data:string}} */ message) => {
+        const { event, data } = JSON.parse(message.data);
+        const listener =
+          EVENT_LISTENERS[event] || GLOBAL_EVENT_LISTENERS[event];
+        if (listener) listener(data, { send, sendSync, session, socket });
+        else throw "NO WS EVENT LISTENER FOR " + event;
+      };
+    }
+  );
 
   /**
    * @param {string} event
-   * @param {(data:any, {})=>void|Promise<void>} listener
+   * @param {(data:any, params?:WebSocketParams)=>void|Promise<void>} listener
    */
   const on = (event, listener) => {
     if (listener) GLOBAL_EVENT_LISTENERS[event] = listener;

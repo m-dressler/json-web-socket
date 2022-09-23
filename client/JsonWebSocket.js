@@ -98,6 +98,7 @@ const JsonWebSocket = (wsUrl, params) => {
     ws.send(JSON.stringify({ event, data }));
     /** @type {(data:any)=>any} */
     const prevListener = EVENT_LISTENERS[event];
+    /** @type {(_:any)=>void} */
     let resolvePromise;
     const response = new Promise((resolve) => (resolvePromise = resolve));
     result.on(event, (data) => {
