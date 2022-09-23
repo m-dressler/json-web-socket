@@ -4,11 +4,22 @@
 const { WebSocket } = require("ws");
 
 /**
+ * @typedef {object} JsonWebSocket
+ * @property { 0 | 1 | 2 | 3} readyState
+ * @property {(() => any) | undefined} onclose
+ * @property {(() => any) | undefined} onopen
+ * @property {(event: string, listener: (data: any) => void)=>void} on
+ * @property {(event: string, data: any)=>void} send
+ * @property {(event: string, data: any)=>Promise<any>} sendSync
+ */
+
+/**
  * Creates a new WebSocket client
  *
  * @param {string} wsUrl The ws:// or wss:// URL to connect to the WebSocket
  * @param {object} [params]
  * @param {number} [params.reconnectTime]
+ * @returns {JsonWebSocket}
  */
 const JsonWebSocket = (wsUrl, params) => {
   const result = {};

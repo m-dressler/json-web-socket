@@ -6,6 +6,7 @@
  * @param {string} wsUrl The ws:// or wss:// URL to connect to the WebSocket
  * @param {object} [params]
  * @param {number} [params.reconnectTime]
+ * @returns {import('../client/JsonWebSocket.js').JsonWebSocket}
  */
 export const JsonWebSocket = (wsUrl, params) => {
   const result = {};

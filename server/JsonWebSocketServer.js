@@ -3,10 +3,13 @@
 // @ts-ignore
 const WebSocket = require("ws");
 
+// @ts-ignore
+/** @typedef {import('http').IncomingMessage} IncomingMessage */
+
 /**
  * @param {WebSocket.ServerOptions} [config]
  * @param {Object} [params]
- * @param {(params:{socket: WebSocket, request:import('http').IncomingMessage, send: (event:string, data:any)=>void, sendSync:(event:string, data:any)=>Promise<any>, session: any})=>void} [params.onconnect]
+ * @param {(params:{socket: WebSocket, request:IncomingMessage, send: (event:string, data:any)=>void, sendSync:(event:string, data:any)=>Promise<any>, session: any})=>void} [params.onconnect]
  * @param {()=>void} [params.onclose]
  */
 const JsonWebSocketServer = (config, params) => {

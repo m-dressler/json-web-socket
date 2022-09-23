@@ -1,11 +1,12 @@
 export = JsonWebSocketServer;
+/** @typedef {import('http').IncomingMessage} IncomingMessage */
 /**
  * @param {WebSocket.ServerOptions} [config]
  * @param {Object} [params]
- * @param {(params:{socket: WebSocket, request:import('http').IncomingMessage, send: (event:string, data:any)=>void, sendSync:(event:string, data:any)=>Promise<any>, session: any})=>void} [params.onconnect]
+ * @param {(params:{socket: WebSocket, request:IncomingMessage, send: (event:string, data:any)=>void, sendSync:(event:string, data:any)=>Promise<any>, session: any})=>void} [params.onconnect]
  * @param {()=>void} [params.onclose]
  */
-declare function JsonWebSocketServer(config?: WebSocket, params?: {
+declare function JsonWebSocketServer(config?: WebSocket.ServerOptions, params?: {
     onconnect?: (params: {
         socket: WebSocket;
         request: any;
@@ -21,3 +22,7 @@ declare function JsonWebSocketServer(config?: WebSocket, params?: {
         [x: string]: (data: any, {}: {}) => void | Promise<void>;
     }) => any;
 };
+declare namespace JsonWebSocketServer {
+    export { IncomingMessage };
+}
+type IncomingMessage = any;
