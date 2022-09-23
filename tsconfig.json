@@ -1,12 +1,11 @@
 {
-  "include": [
-      "**/*.js"
-  ],
   "compilerOptions": {
-      "declaration": true,
-      "emitDeclarationOnly": true,
-      "allowJs": true,
-      "target": "es5",
-      "lib": ["es5","es2015.core", "es2015.promise", "DOM"]
-  }
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "allowJs": true,
+    "strict": true,
+    "target": "es5",
+    "lib": ["es5", "es2015.core", "es2015.promise", "DOM"]
+  },
+  "include": ["**/*.js"]
 }
