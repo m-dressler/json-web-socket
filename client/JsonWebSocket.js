@@ -17,7 +17,7 @@ const { WebSocket } = require("ws");
 /**
  * Creates a new WebSocket client
  *
- * @param {string} [url] The ws:// or wss:// URL to connect to the WebSocket
+ * @param {string|undefined} [url] The ws:// or wss:// URL to connect to the WebSocket
  * @param {object} [params]
  * @param {number} [params.reconnectTime]
  * @returns {JsonWebSocket}
