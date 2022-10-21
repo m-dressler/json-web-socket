@@ -8,6 +8,7 @@
     "require": "./index.js"
   },
   "browser": "./browser/JsonWebSocket.js",
+  "types": "./types/index.d.ts",
   "engines": {
     "node": ">=10.0.0"
   },

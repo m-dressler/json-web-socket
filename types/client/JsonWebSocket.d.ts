@@ -12,13 +12,15 @@ export = JsonWebSocket;
 /**
  * Creates a new WebSocket client
  *
- * @param {string} [url] The ws:// or wss:// URL to connect to the WebSocket
+ * @param {string|undefined} [url] The ws:// or wss:// URL to connect to the WebSocket
  * @param {object} [params]
  * @param {number} [params.reconnectTime]
+ * @param {number} [params.connectTimeout]
  * @returns {JsonWebSocket}
  */
 declare function JsonWebSocket(url?: string | undefined, params?: {
     reconnectTime?: number | undefined;
+    connectTimeout?: number | undefined;
 } | undefined): JsonWebSocket;
 declare namespace JsonWebSocket {
     export { JsonWebSocket };
