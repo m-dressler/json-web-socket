@@ -20,6 +20,7 @@ const { WebSocket } = require("ws");
  * @param {string|undefined} [url] The ws:// or wss:// URL to connect to the WebSocket
  * @param {object} [params]
  * @param {number} [params.reconnectTime]
+ * @param {number} [params.connectTimeout]
  * @returns {JsonWebSocket}
  */
 const JsonWebSocket = (url, params) => {
@@ -47,8 +48,19 @@ const JsonWebSocket = (url, params) => {
     // TODO handle already connected scenario
     ws = new WebSocket(url);
     result.readyState = WebSocket.CONNECTING;
+
+    /** @type {number|undefined} */
+    let timeoutId;
+    // If we have a defined connection timeout, add a race condition
+    if (params?.connectTimeout || 0 > 0) {
+      timeoutId = setTimeout(() => {
+        if (result.readyState === WebSocket.CONNECTING) ws.close();
+      }, params?.connectTimeout);
+    }
+
     ws.onopen = () => {
       result.readyState = WebSocket.OPEN;
+      clearTimeout(timeoutId); // Clear the timeout as we connected
       if (result.onopen) result.onopen();
       resolveConnect(void 0);
     };
