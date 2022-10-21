@@ -2,12 +2,12 @@
   "name": "ws-json",
   "version": "1.1.2",
   "description": "JSON abstraction to the WebSocket for both client & server using event system",
-  "main": "index.js",
+  "main": "./src/index.js",
   "exports": {
-    "import": "./wrapper.mjs",
-    "require": "./index.js"
+    "import": "./src/wrapper.mjs",
+    "require": "./src/index.js"
   },
-  "browser": "./browser/JsonWebSocket.js",
+  "browser": "./src/browser/JsonWebSocket.js",
   "types": "./types/index.d.ts",
   "engines": {
     "node": ">=10.0.0"
