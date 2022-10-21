@@ -79,7 +79,7 @@ const JsonWebSocket = (url, params) => {
       const { event, data } = JSON.parse(message.data);
       const listener = EVENT_LISTENERS[event];
       if (listener) listener(data);
-      else throw "NO WS EVENT LISTENER FOR" + event;
+      else console.error(`NO WS EVENT LISTENER FOR "${event}"`);
     };
     return connectPromise;
   };

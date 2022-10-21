@@ -81,7 +81,7 @@ const JsonWebSocketServer = (config, params) => {
         const listener =
           EVENT_LISTENERS[event] || GLOBAL_EVENT_LISTENERS[event];
         if (listener) listener(data, { send, sendSync, session, socket });
-        else throw "NO WS EVENT LISTENER FOR " + event;
+        else console.error(`NO WS EVENT LISTENER FOR "${event}"`);
       };
     }
   );
