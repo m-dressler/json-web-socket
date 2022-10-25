@@ -21,7 +21,7 @@ const WebSocket = require("ws");
  */
 const JsonWebSocketServer = (config, params) => {
   const webSocketServer = new WebSocket.Server(config);
-  /** @type {Object.<string, (data:any, params: WebSocketParams)=>void|Promise<void>>} */
+  /** @type {Object.<string, (data:any, params: WebSocketParams)=>void|Promise<void>|any|Promise<any>>} */
   const GLOBAL_EVENT_LISTENERS = {};
 
   webSocketServer.on(
@@ -31,13 +31,13 @@ const JsonWebSocketServer = (config, params) => {
      * @param {IncomingMessage} request
      */
     (socket, request) => {
-      /** @type {Object.<string, (data:any, params?: WebSocketParams)=>void|Promise<void>>} */
+      /** @type {Object.<string, (data:any, params?: WebSocketParams)=>void|Promise<void>|any|Promise<any>>} */
       const EVENT_LISTENERS = {};
       const session = {};
 
       /**
        * @param {string} event
-       * @param {(data:any, params?: WebSocketParams)=>void|Promise<void>} listener
+       * @param {(data:any, params?: WebSocketParams)=>void|Promise<void>|any|Promise<any>} listener
        */
       const on = (event, listener) => {
         if (listener) EVENT_LISTENERS[event] = listener;
@@ -76,19 +76,21 @@ const JsonWebSocketServer = (config, params) => {
 
       socket.onclose = params?.onclose;
 
-      socket.onmessage = (/** @type {{data:string}} */ message) => {
+      socket.onmessage = async (/** @type {{data:string}} */ message) => {
         const { event, data } = JSON.parse(message.data);
         const listener =
           EVENT_LISTENERS[event] || GLOBAL_EVENT_LISTENERS[event];
-        if (listener) listener(data, { send, sendSync, session, socket });
-        else console.error(`NO WS EVENT LISTENER FOR "${event}"`);
+        if (listener) {
+          const result = await listener(data, { send, sendSync, session, socket });
+          if (result !== undefined) send(event, result);
+        } else console.error(`NO WS EVENT LISTENER FOR "${event}"`);
       };
     }
   );
 
   /**
    * @param {string} event
-   * @param {(data:any, params:WebSocketParams)=>void|Promise<void>} listener
+   * @param {(data:any, params:WebSocketParams)=>void|Promise<void>|any|Promise<any>} listener
    */
   const on = (event, listener) => {
     if (listener) GLOBAL_EVENT_LISTENERS[event] = listener;
@@ -96,7 +98,7 @@ const JsonWebSocketServer = (config, params) => {
   };
 
   /**
-   * @param {Object.<string, (data:any, params:WebSocketParams)=>void|Promise<void>>} handlers
+   * @param {Object.<string, (data:any, params:WebSocketParams)=>void|Promise<void>|any|Promise<any>>} handlers
    */
   const onAll = (handlers) =>
     void Object.assign(GLOBAL_EVENT_LISTENERS, handlers);
