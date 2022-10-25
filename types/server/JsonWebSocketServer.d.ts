@@ -24,9 +24,9 @@ declare function JsonWebSocketServer(config?: any, params?: {
     onclose?: (() => void) | undefined;
 } | undefined): {
     webSocketServer: any;
-    on: (event: string, listener: (data: any, params?: WebSocketParams) => void | Promise<void>) => void;
+    on: (event: string, listener: (data: any, params: WebSocketParams) => void | Promise<void>) => void;
     onAll: (handlers: {
-        [x: string]: (data: any, params?: WebSocketParams) => void | Promise<void>;
+        [x: string]: (data: any, params: WebSocketParams) => void | Promise<void>;
     }) => undefined;
 };
 declare namespace JsonWebSocketServer {

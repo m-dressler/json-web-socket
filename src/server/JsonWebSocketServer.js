@@ -21,7 +21,7 @@ const WebSocket = require("ws");
  */
 const JsonWebSocketServer = (config, params) => {
   const webSocketServer = new WebSocket.Server(config);
-  /** @type {Object.<string, (data:any, params?: WebSocketParams)=>void|Promise<void>>} */
+  /** @type {Object.<string, (data:any, params: WebSocketParams)=>void|Promise<void>>} */
   const GLOBAL_EVENT_LISTENERS = {};
 
   webSocketServer.on(
@@ -88,7 +88,7 @@ const JsonWebSocketServer = (config, params) => {
 
   /**
    * @param {string} event
-   * @param {(data:any, params?:WebSocketParams)=>void|Promise<void>} listener
+   * @param {(data:any, params:WebSocketParams)=>void|Promise<void>} listener
    */
   const on = (event, listener) => {
     if (listener) GLOBAL_EVENT_LISTENERS[event] = listener;
@@ -96,7 +96,7 @@ const JsonWebSocketServer = (config, params) => {
   };
 
   /**
-   * @param {Object.<string, (data:any, params?:WebSocketParams)=>void|Promise<void>>} handlers
+   * @param {Object.<string, (data:any, params:WebSocketParams)=>void|Promise<void>>} handlers
    */
   const onAll = (handlers) =>
     void Object.assign(GLOBAL_EVENT_LISTENERS, handlers);
