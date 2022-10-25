@@ -96,7 +96,7 @@ const JsonWebSocketServer = (config, params) => {
   };
 
   /**
-   * @param {Object.<string, (data:any, {})=>void|Promise<void>>} handlers
+   * @param {Object.<string, (data:any, params?:WebSocketParams)=>void|Promise<void>>} handlers
    */
   const onAll = (handlers) =>
     void Object.assign(GLOBAL_EVENT_LISTENERS, handlers);
